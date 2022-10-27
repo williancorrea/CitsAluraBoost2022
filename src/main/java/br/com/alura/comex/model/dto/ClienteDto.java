@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.br.CPF;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -23,6 +24,7 @@ public class ClienteDto {
 
     @NotNull
     @NotEmpty
+    @CPF
     @Length(min = 11, max = 14)
     private String cpf;
 
