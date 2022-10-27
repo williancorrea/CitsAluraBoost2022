@@ -2,16 +2,13 @@ package br.com.alura.comex.service;
 
 import br.com.alura.comex.config.exception.NotFoundException;
 import br.com.alura.comex.model.Cliente;
-import br.com.alura.comex.model.ClienteDto;
+import br.com.alura.comex.model.dto.ClienteDto;
 import br.com.alura.comex.repository.ClienteRepository;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ClienteService {
@@ -22,15 +19,11 @@ public class ClienteService {
         this.clienteRepository = clienteRepository;
     }
 
-    public List<Cliente> findAll() {
+    public List<Cliente> listarTodos() {
         return clienteRepository.findAll();
     }
 
-    public List<Cliente> findByNome(String nome) {
-        return clienteRepository.findByNomeContainingIgnoreCase(nome);
-    }
-
-    public Cliente findByID(Long id) {
+    public Cliente buscarPorId(Long id) {
         return clienteRepository.findById(id)
                 .orElseThrow(() -> {
                     throw new NotFoundException();
@@ -38,26 +31,41 @@ public class ClienteService {
     }
 
     @Transactional
-    public Cliente cadastrar(ClienteDto clienteDto) {
-        Cliente cliente = new Cliente();
-        cliente.setNome(clienteDto.getNome());
-        return cadastrar(cliente);
+    public Cliente inserir(ClienteDto clienteDto) {
+        clienteDto.setId(null);
+        return persist(clienteDto.convert());
+    }
+
+    @Transactional
+    public Cliente inserir(Cliente cliente) {
+        cliente.setId(null);
+        return persist(cliente);
     }
 
     @Transactional
     public Cliente atualizar(ClienteDto clienteDto) {
-        //TODO: FAzer o tratamento de nulo
-        Cliente cliente = this.findByID(clienteDto.getId());
-        cliente.setNome(clienteDto.getNome());
-        return cadastrar(cliente);
-    }
-
-    private Cliente cadastrar(Cliente cliente) {
-        return clienteRepository.saveAndFlush(cliente);
+        this.buscarPorId(clienteDto.getId());
+        return persist(clienteDto.convert());
     }
 
     @Transactional
-    public void deletar(Long id) {
-        clienteRepository.delete(this.findByID(id));
+    public Cliente atualizar(Cliente cliente) {
+        this.buscarPorId(cliente.getId());
+        return persist(cliente);
+    }
+
+    @Transactional
+    public void remover(Long id) {
+        clienteRepository.delete(this.buscarPorId(id));
+    }
+
+    /**
+     * Metodo utilizado para efetuar validações e persistencia na base de dados
+     *
+     * @param cliente
+     * @return
+     */
+    protected Cliente persist(Cliente cliente) {
+        return clienteRepository.saveAndFlush(cliente);
     }
 }

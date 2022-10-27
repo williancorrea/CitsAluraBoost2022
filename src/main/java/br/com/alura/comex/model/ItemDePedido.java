@@ -1,10 +1,19 @@
 package br.com.alura.comex.model;
 
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.Hibernate;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.Objects;
 
 @Entity
 @Table(name = "itens_pedido")
+@Getter
+@Setter
+@Builder
 public class ItemDePedido {
 
     @Id
@@ -42,43 +51,16 @@ public class ItemDePedido {
         return this.precoUnitario.multiply(new BigDecimal(this.quantidade));
     }
 
-    public Long getId() {
-        return id;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        ItemDePedido that = (ItemDePedido) o;
+        return id != null && Objects.equals(id, that.id);
     }
 
-    public BigDecimal getPrecoUnitario() {
-        return precoUnitario;
-    }
-
-    public Integer getQuantidade() {
-        return quantidade;
-    }
-
-    public Pedido getPedidoId() {
-        return pedido;
-    }
-
-    public Produto getProdutoId() {
-        return produto;
-    }
-
-    public BigDecimal getDesconto() {
-        return desconto;
-    }
-
-    public TipoDescontoItem getTipoDesconto() {
-        return tipoDesconto;
-    }
-
-    public void setPedido(Pedido pedido) {
-        this.pedido = pedido;
-    }
-
-    public void setDesconto(BigDecimal desconto) {
-        this.desconto = desconto;
-    }
-
-    public void setTipoDesconto(TipoDescontoItem tipoDesconto) {
-        this.tipoDesconto = tipoDesconto;
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
     }
 }
