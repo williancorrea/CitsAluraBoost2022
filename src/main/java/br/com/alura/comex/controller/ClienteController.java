@@ -1,10 +1,9 @@
 package br.com.alura.comex.controller;
 
 import br.com.alura.comex.model.Cliente;
-import br.com.alura.comex.model.ClienteDto;
+import br.com.alura.comex.model.dto.ClienteDto;
 import br.com.alura.comex.service.ClienteService;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +13,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/clientes")
@@ -26,27 +26,24 @@ public class ClienteController {
     }
 
     @RequestMapping
-    public List<Cliente> listar() {
-        //TODO: Retornar o DTO
-        return clienteService.findAll();
+    public List<ClienteDto> listar() {
+        return clienteService.listarTodos().parallelStream().map(ClienteDto::new).collect(Collectors.toList());
     }
 
     @RequestMapping("/{id}")
     public ResponseEntity<ClienteDto> buscarPorNome(@PathVariable("id") Long id) {
-        //TODO: Retornar o DTO
-        Cliente c = clienteService.findByID(id);
-        return ResponseEntity.ok().body(new ClienteDto(c));
+        Cliente cliente = clienteService.buscarPorId(id);
+        return ResponseEntity.ok().body(new ClienteDto(cliente));
     }
 
-    @RequestMapping("/filtro")
-    public List<Cliente> buscarPorNome(@Param("nome") String nome) {
-        //TODO: Retornar o DTO
-        return clienteService.findByNome(nome);
-    }
+//    @RequestMapping("/filtro")
+//    public List<Cliente> buscarPorNome(@Param("nome") String nome) {
+//        return clienteService.findByNome(nome);
+//    }
 
     @PostMapping
     public ResponseEntity<ClienteDto> cadastrar(@RequestBody @Valid ClienteDto clienteDto, UriComponentsBuilder uriBuilder) {
-        Cliente cliente = clienteService.cadastrar(clienteDto);
+        Cliente cliente = clienteService.inserir(clienteDto);
         URI uri = uriBuilder.path("/clientes/{id}").buildAndExpand(cliente.getId()).toUri();
         return ResponseEntity.created(uri).body(new ClienteDto(cliente));
     }
@@ -61,6 +58,6 @@ public class ClienteController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
     public void cadastrar(@PathVariable("id") @NotNull Long id) {
-        clienteService.deletar(id);
+        clienteService.remover(id);
     }
 }
