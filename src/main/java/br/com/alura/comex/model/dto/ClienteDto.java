@@ -1,6 +1,7 @@
 package br.com.alura.comex.model.dto;
 
 import br.com.alura.comex.model.Cliente;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
@@ -10,6 +11,7 @@ import javax.validation.constraints.NotNull;
 
 @Data
 @Builder
+@AllArgsConstructor
 public class ClienteDto {
 
     private Long id;

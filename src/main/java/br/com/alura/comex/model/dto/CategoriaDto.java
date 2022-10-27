@@ -3,6 +3,7 @@ package br.com.alura.comex.model.dto;
 import br.com.alura.comex.model.Categoria;
 import br.com.alura.comex.model.Produto;
 import br.com.alura.comex.model.StatusCategoria;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.ToString;
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 
 @Data
 @Builder
+@AllArgsConstructor
 public class CategoriaDto {
 
     private Long id;

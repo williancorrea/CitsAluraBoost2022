@@ -3,6 +3,7 @@ package br.com.alura.comex.model.dto;
 import br.com.alura.comex.model.Cliente;
 import br.com.alura.comex.model.Pedido;
 import br.com.alura.comex.model.TipoDesconto;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
@@ -12,6 +13,7 @@ import java.time.LocalDate;
 
 @Data
 @Builder
+@AllArgsConstructor
 public class PedidoDto {
 
     private Long id;

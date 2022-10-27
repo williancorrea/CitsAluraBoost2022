@@ -1,9 +1,6 @@
 package br.com.alura.comex.model;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -24,6 +21,7 @@ import javax.persistence.Table;
 @Getter
 @Setter
 @Builder
+@AllArgsConstructor
 @ToString
 public class Pedido {
 

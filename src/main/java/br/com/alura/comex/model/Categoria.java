@@ -1,9 +1,6 @@
 package br.com.alura.comex.model;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.Hibernate;
 import org.hibernate.validator.constraints.Length;
 
@@ -17,6 +14,7 @@ import java.util.Objects;
 @Entity
 @Table(name = "categorias")
 @Builder
+@AllArgsConstructor
 @Getter
 @Setter
 @ToString

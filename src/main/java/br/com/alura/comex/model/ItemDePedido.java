@@ -1,5 +1,6 @@
 package br.com.alura.comex.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,6 +15,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @Builder
+@AllArgsConstructor
 public class ItemDePedido {
 
     @Id
