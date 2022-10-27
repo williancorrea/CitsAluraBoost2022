@@ -1,126 +1,92 @@
 package br.com.alura.comex.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+import org.hibernate.Hibernate;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.br.CPF;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import java.util.Objects;
 
 @Entity
 @Table(name = "clientes")
+@Getter
+@Setter
+@ToString
+@Builder
 public class Cliente {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull
+    @NotEmpty
+    @Length(min = 3, max = 60)
     @Column(nullable = false)
     private String nome;
 
+    @NotNull
+    @NotEmpty
+    @Length(min = 11, max = 14)
+    @CPF
     @Column(nullable = false)
     private String cpf;
 
+    @Length(max = 100)
     private String telefone;
 
+    @NotNull
+    @NotEmpty
+    @Length(min = 3, max = 100)
     @Column(nullable = false)
     private String rua;
 
+    @NotNull
+    @NotEmpty
+    @Length(min = 1, max = 20)
     @Column(nullable = false)
     private String numero;
 
+    @Length(max = 100)
     private String complemento;
 
+    @NotNull
+    @NotEmpty
+    @Length(min = 3, max = 100)
     @Column(nullable = false)
     private String bairro;
 
+    @NotNull
+    @NotEmpty
+    @Length(min = 3, max = 100)
     @Column(nullable = false)
     private String cidade;
 
+    @NotNull
+    @NotEmpty
+    @Length(min = 2, max = 50)
     @Column(nullable = false)
     private String estado;
 
     public Cliente() {
     }
 
-    public Long getId() {
-        return id;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        Cliente cliente = (Cliente) o;
+        return id != null && Objects.equals(id, cliente.id);
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
     }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public String getCpf() {
-        return cpf;
-    }
-
-    public void setCpf(String cpf) {
-        this.cpf = cpf;
-    }
-
-    public String getTelefone() {
-        return telefone;
-    }
-
-    public void setTelefone(String telefone) {
-        this.telefone = telefone;
-    }
-
-    public String getRua() {
-        return rua;
-    }
-
-    public void setRua(String rua) {
-        this.rua = rua;
-    }
-
-    public String getNumero() {
-        return numero;
-    }
-
-    public void setNumero(String numero) {
-        this.numero = numero;
-    }
-
-    public String getComplemento() {
-        return complemento;
-    }
-
-    public void setComplemento(String complemento) {
-        this.complemento = complemento;
-    }
-
-    public String getBairro() {
-        return bairro;
-    }
-
-    public void setBairro(String bairro) {
-        this.bairro = bairro;
-    }
-
-    public String getCidade() {
-        return cidade;
-    }
-
-    public void setCidade(String cidade) {
-        this.cidade = cidade;
-    }
-
-    public String getEstado() {
-        return estado;
-    }
-
-    public void setEstado(String estado) {
-        this.estado = estado;
-    }
-
 }

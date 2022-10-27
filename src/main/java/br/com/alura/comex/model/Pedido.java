@@ -1,5 +1,10 @@
 package br.com.alura.comex.model;
 
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -16,6 +21,10 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "pedidos")
+@Getter
+@Setter
+@Builder
+@ToString
 public class Pedido {
 
     @Id
@@ -25,6 +34,7 @@ public class Pedido {
     private LocalDate data = LocalDate.now();
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ToString.Exclude
     private Cliente cliente;
 
     private BigDecimal desconto = BigDecimal.ZERO;
@@ -33,46 +43,6 @@ public class Pedido {
     private TipoDesconto tipoDesconto = TipoDesconto.NENHUM;
 
     public Pedido() {
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public LocalDate getData() {
-        return data;
-    }
-
-    public void setData(LocalDate data) {
-        this.data = data;
-    }
-
-    public Cliente getCliente() {
-        return cliente;
-    }
-
-    public void setCliente(Cliente cliente) {
-        this.cliente = cliente;
-    }
-
-    public BigDecimal getDesconto() {
-        return desconto;
-    }
-
-    public void setDesconto(BigDecimal desconto) {
-        this.desconto = desconto;
-    }
-
-    public TipoDesconto getTipoDesconto() {
-        return tipoDesconto;
-    }
-
-    public void setTipoDesconto(TipoDesconto tipoDesconto) {
-        this.tipoDesconto = tipoDesconto;
     }
 
 }
