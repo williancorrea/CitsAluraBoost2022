@@ -26,7 +26,7 @@ public class Categoria {
 
     @NotNull
     @NotEmpty
-    @Length(min = 3, max = 60)
+    @Length(min = 2, max = 60)
     private String nome;
 
     @Enumerated(EnumType.STRING)

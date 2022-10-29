@@ -3,6 +3,7 @@ package br.com.alura.comex.model.dto;
 import br.com.alura.comex.model.Categoria;
 import br.com.alura.comex.model.Produto;
 import br.com.alura.comex.model.StatusCategoria;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,17 +24,13 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class CategoriaDto {
 
+    @JsonIgnore
     private Long id;
 
     @NotNull
     @NotEmpty
-    @Length(min = 3, max = 60)
+    @Length(min = 2, max = 60)
     private String nome;
-
-    @NotNull
-    private StatusCategoria status;
-
-    private List<ProdutoDto> produtos = new ArrayList<>();
 
     public CategoriaDto() {
     }
@@ -41,15 +38,12 @@ public class CategoriaDto {
     public CategoriaDto(Categoria categoria) {
         this.id = categoria.getId();
         this.nome = categoria.getNome();
-        this.status = categoria.getStatus();
-        this.produtos = categoria.getProdutos().parallelStream().map(ProdutoDto::new).collect(Collectors.toList());
     }
 
     public Categoria convert() {
         return Categoria.builder()
                 .id(this.id)
                 .nome(this.nome)
-                .status(this.status)
                 .produtos(this.convert().getProdutos())
                 .build();
     }
