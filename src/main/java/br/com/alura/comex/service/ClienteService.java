@@ -32,8 +32,7 @@ public class ClienteService {
 
     @Transactional
     public Cliente inserir(ClienteDto clienteDto) {
-        clienteDto.setId(null);
-        return persist(clienteDto.convert());
+        return inserir(clienteDto.convert());
     }
 
     @Transactional
@@ -45,7 +44,7 @@ public class ClienteService {
     @Transactional
     public Cliente atualizar(ClienteDto clienteDto) {
         this.buscarPorId(clienteDto.getId());
-        return persist(clienteDto.convert());
+        return atualizar(clienteDto.convert());
     }
 
     @Transactional
@@ -59,12 +58,6 @@ public class ClienteService {
         clienteRepository.delete(this.buscarPorId(id));
     }
 
-    /**
-     * Metodo utilizado para efetuar validações e persistencia na base de dados
-     *
-     * @param cliente
-     * @return
-     */
     protected Cliente persist(Cliente cliente) {
         return clienteRepository.saveAndFlush(cliente);
     }

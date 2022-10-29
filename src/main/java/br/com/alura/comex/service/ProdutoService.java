@@ -32,8 +32,7 @@ public class ProdutoService {
 
     @Transactional
     public Produto inserir(ProdutoDto produtoDto) {
-        produtoDto.setId(null);
-        return persist(produtoDto.convert());
+        return inserir(produtoDto.convert());
     }
 
     @Transactional
@@ -44,8 +43,7 @@ public class ProdutoService {
 
     @Transactional
     public Produto atualizar(ProdutoDto produtoDto) {
-        this.buscarPorId(produtoDto.getId());
-        return persist(produtoDto.convert());
+        return atualizar(produtoDto.convert());
     }
 
     @Transactional
@@ -59,12 +57,6 @@ public class ProdutoService {
         produtoRepository.delete(this.buscarPorId(id));
     }
 
-    /**
-     * Metodo utilizado para efetuar validações e persistencia na base de dados
-     *
-     * @param produto
-     * @return
-     */
     protected Produto persist(Produto produto) {
         return produtoRepository.saveAndFlush(produto);
     }

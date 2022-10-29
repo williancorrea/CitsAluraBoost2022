@@ -32,8 +32,7 @@ public class PedidoService {
 
     @Transactional
     public Pedido inserir(PedidoDto pedidoDto) {
-        pedidoDto.setId(null);
-        return persist(pedidoDto.convert());
+        return inserir(pedidoDto.convert());
     }
 
     @Transactional
@@ -44,14 +43,13 @@ public class PedidoService {
 
     @Transactional
     public Pedido atualizar(PedidoDto pedidoDto) {
-        this.buscarPorId(pedidoDto.getId());
-        return persist(pedidoDto.convert());
+        return atualizar(pedidoDto.convert());
     }
 
     @Transactional
     public Pedido atualizar(Pedido pedido) {
         this.buscarPorId(pedido.getId());
-        return persist(pedido);
+        return atualizar(pedido);
     }
 
     @Transactional
@@ -59,12 +57,6 @@ public class PedidoService {
         pedidoRepository.delete(this.buscarPorId(id));
     }
 
-    /**
-     * Metodo utilizado para efetuar validações e persistencia na base de dados
-     *
-     * @param pedido
-     * @return
-     */
     protected Pedido persist(Pedido pedido) {
         return pedidoRepository.saveAndFlush(pedido);
     }
