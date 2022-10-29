@@ -25,7 +25,7 @@ public class Produto {
 
     @NotNull
     @NotEmpty
-    @Length(min = 3, max = 60)
+    @Length(min = 2, max = 60)
     @Column(nullable = false)
     private String nome;
 

@@ -44,7 +44,6 @@ public class CategoriaDto {
         return Categoria.builder()
                 .id(this.id)
                 .nome(this.nome)
-                .produtos(this.convert().getProdutos())
                 .build();
     }
 }
