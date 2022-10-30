@@ -4,17 +4,10 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "pedidos")
@@ -31,7 +24,7 @@ public class Pedido {
 
     private LocalDate data = LocalDate.now();
 
-    @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @ToString.Exclude
     private Cliente cliente;
 
@@ -39,6 +32,9 @@ public class Pedido {
 
     @Enumerated(EnumType.STRING)
     private TipoDesconto tipoDesconto = TipoDesconto.NENHUM;
+
+    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
+    private List<ItemDePedido> itens = new ArrayList<>();
 
     public Pedido() {
     }

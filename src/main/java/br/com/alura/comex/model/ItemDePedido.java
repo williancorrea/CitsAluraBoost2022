@@ -36,6 +36,7 @@ public class ItemDePedido {
 
     @Column(nullable = false)
     private BigDecimal desconto = BigDecimal.ZERO;
+
     @Enumerated(EnumType.STRING)
     private TipoDescontoItem tipoDesconto = TipoDescontoItem.NENHUM;
 

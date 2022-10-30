@@ -77,4 +77,29 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 request);
     }
 
+    @ResponseBody
+    @ExceptionHandler(BusinessException.class)
+    public ResponseEntity<Object> handlerBusinessException(BusinessException ex, WebRequest request) {
+
+        List<ApiError.Message> messages = new ArrayList<>();
+        messages.add(new ApiError.Message(
+                        "business-exception",
+                        ex.getMessageDescription()
+                )
+        );
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+
+        String uri = ((ServletWebRequest) request).getRequest().getRequestURI();
+        String method = ((ServletWebRequest) request).getRequest().getMethod();
+
+        return handleExceptionInternal(
+                ex,
+                new ApiError(messages, HttpStatus.BAD_GATEWAY, uri, method),
+                headers,
+                HttpStatus.BAD_GATEWAY,
+                request);
+    }
+
 }
