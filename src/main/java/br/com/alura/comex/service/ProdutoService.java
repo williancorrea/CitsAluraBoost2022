@@ -5,7 +5,9 @@ import br.com.alura.comex.model.Produto;
 import br.com.alura.comex.model.dto.ProdutoDto;
 import br.com.alura.comex.repository.CategoriaRepository;
 import br.com.alura.comex.repository.ProdutoRepository;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -16,11 +18,14 @@ import java.util.List;
 @Service
 public class ProdutoService {
 
+    private final MessageSource messageSource;
     private final ProdutoRepository produtoRepository;
     private final CategoriaService categoriaService;
 
-    public ProdutoService(@Lazy ProdutoRepository produtoRepository,
+    public ProdutoService(@Lazy MessageSource messageSource,
+                          @Lazy ProdutoRepository produtoRepository,
                           @Lazy CategoriaService categoriaService) {
+        this.messageSource = messageSource;
         this.produtoRepository = produtoRepository;
         this.categoriaService = categoriaService;
     }
@@ -32,7 +37,7 @@ public class ProdutoService {
     public Produto buscarPorId(Long id) {
         return produtoRepository.findById(id)
                 .orElseThrow(() -> {
-                    throw new NotFoundException();
+                    throw new NotFoundException(messageSource.getMessage("product.not-found", new Object[]{id}, LocaleContextHolder.getLocale()));
                 });
     }
 

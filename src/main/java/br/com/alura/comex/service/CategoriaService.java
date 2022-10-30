@@ -6,7 +6,9 @@ import br.com.alura.comex.model.StatusCategoria;
 import br.com.alura.comex.model.dto.CategoriaDto;
 import br.com.alura.comex.model.projections.CategoriaPedidosProjection;
 import br.com.alura.comex.repository.CategoriaRepository;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,9 +17,11 @@ import java.util.List;
 @Service
 public class CategoriaService {
 
+    private final MessageSource messageSource;
     private final CategoriaRepository categoriaRepository;
 
-    public CategoriaService(@Lazy CategoriaRepository categoriaRepository) {
+    public CategoriaService(@Lazy MessageSource messageSource, @Lazy CategoriaRepository categoriaRepository) {
+        this.messageSource = messageSource;
         this.categoriaRepository = categoriaRepository;
     }
 
@@ -26,10 +30,9 @@ public class CategoriaService {
     }
 
     public Categoria buscarPorId(Long id) {
-        return categoriaRepository.findById(id)
-                .orElseThrow(() -> {
-                    throw new NotFoundException();
-                });
+        return categoriaRepository.findById(id).orElseThrow(() -> {
+            throw new NotFoundException(messageSource.getMessage("category.not-found", new Object[]{id}, LocaleContextHolder.getLocale()));
+        });
     }
 
     @Transactional
@@ -64,7 +67,7 @@ public class CategoriaService {
         return categoriaRepository.saveAndFlush(categoria);
     }
 
-    public List<CategoriaPedidosProjection> pedidos(){
+    public List<CategoriaPedidosProjection> pedidos() {
         return categoriaRepository.relatorioPedidos();
     }
 }

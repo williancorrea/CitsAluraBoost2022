@@ -7,19 +7,24 @@ import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Order(Ordered.HIGHEST_PRECEDENCE)
+//@ControllerAdvice(value = "br.com.alura")
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
@@ -46,18 +51,23 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 request);
     }
 
-    @ExceptionHandler({NotFoundException.class})
-    public ResponseEntity<Object> handlerNotFoundException(NotFoundException ex, HttpHeaders headers, WebRequest request) {
 
-        String uri = ((ServletWebRequest) request).getRequest().getRequestURI();
-        String method = ((ServletWebRequest) request).getRequest().getMethod();
+    @ResponseBody
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<Object> handlerNotFoundException(NotFoundException ex, WebRequest request) {
 
         List<ApiError.Message> messages = new ArrayList<>();
         messages.add(new ApiError.Message(
                         "resource.not-found",
-                        messageSource.getMessage("resource.not-found", null, LocaleContextHolder.getLocale())
+                        ex.getMessageDescription()
                 )
         );
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+
+        String uri = ((ServletWebRequest) request).getRequest().getRequestURI();
+        String method = ((ServletWebRequest) request).getRequest().getMethod();
 
         return handleExceptionInternal(
                 ex,
