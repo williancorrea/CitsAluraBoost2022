@@ -38,6 +38,8 @@ public class ProdutoDto {
     @NotNull
     private Long categoriaId;
 
+    private String categoriaNome;
+
     public ProdutoDto() {
     }
 
@@ -46,8 +48,9 @@ public class ProdutoDto {
         this.nome = produto.getNome();
         this.descricao = produto.getDescricao();
         this.precoUnitario = produto.getPrecoUnitario();
-        this.categoriaId = produto.getCategoria().getId();
         this.quantidadeEstoque = produto.getQuantidadeEstoque();
+        this.categoriaId = produto.getCategoria().getId();
+        this.categoriaNome = produto.getCategoria().getNome();
     }
 
     public Produto convert() {

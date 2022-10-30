@@ -3,8 +3,11 @@ package br.com.alura.comex.service;
 import br.com.alura.comex.config.exception.NotFoundException;
 import br.com.alura.comex.model.Produto;
 import br.com.alura.comex.model.dto.ProdutoDto;
+import br.com.alura.comex.repository.CategoriaRepository;
 import br.com.alura.comex.repository.ProdutoRepository;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,13 +17,16 @@ import java.util.List;
 public class ProdutoService {
 
     private final ProdutoRepository produtoRepository;
+    private final CategoriaService categoriaService;
 
-    public ProdutoService(@Lazy ProdutoRepository produtoRepository) {
+    public ProdutoService(@Lazy ProdutoRepository produtoRepository,
+                          @Lazy CategoriaService categoriaService) {
         this.produtoRepository = produtoRepository;
+        this.categoriaService = categoriaService;
     }
 
-    public List<Produto> listarTodos() {
-        return produtoRepository.findAll();
+    public Page<Produto> listarTodos(Pageable pageable) {
+        return produtoRepository.findAll(pageable);
     }
 
     public Produto buscarPorId(Long id) {
@@ -58,6 +64,7 @@ public class ProdutoService {
     }
 
     protected Produto persist(Produto produto) {
+        categoriaService.buscarPorId(produto.getCategoria().getId());
         return produtoRepository.saveAndFlush(produto);
     }
 }
