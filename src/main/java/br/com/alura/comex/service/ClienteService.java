@@ -7,10 +7,10 @@ import br.com.alura.comex.repository.ClienteRepository;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 public class ClienteService {
@@ -23,15 +23,14 @@ public class ClienteService {
         this.clienteRepository = clienteRepository;
     }
 
-    public List<Cliente> listarTodos() {
-        return clienteRepository.findAll();
+    public Page<Cliente> listarTodos(Pageable pageable) {
+        return clienteRepository.findAll(pageable);
     }
 
     public Cliente buscarPorId(Long id) {
-        return clienteRepository.findById(id)
-                .orElseThrow(() -> {
-                    throw new NotFoundException(messageSource.getMessage("client.not-found", new Object[]{id}, LocaleContextHolder.getLocale()));
-                });
+        return clienteRepository.findById(id).orElseThrow(() -> {
+            throw new NotFoundException(messageSource.getMessage("client.not-found", new Object[]{id}, LocaleContextHolder.getLocale()));
+        });
     }
 
     @Transactional

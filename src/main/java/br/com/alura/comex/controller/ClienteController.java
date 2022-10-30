@@ -2,8 +2,12 @@ package br.com.alura.comex.controller;
 
 import br.com.alura.comex.model.Cliente;
 import br.com.alura.comex.model.dto.ClienteDto;
+import br.com.alura.comex.model.dto.ClienteListDto;
 import br.com.alura.comex.service.ClienteService;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,8 +30,8 @@ public class ClienteController {
     }
 
     @RequestMapping
-    public List<ClienteDto> listar() {
-        return clienteService.listarTodos().parallelStream().map(ClienteDto::new).collect(Collectors.toList());
+    public List<ClienteListDto> listar(@PageableDefault(sort = {"nome"}, direction = Sort.Direction.ASC, value = 5) Pageable pageable) {
+        return clienteService.listarTodos(pageable).getContent().parallelStream().map(ClienteListDto::new).collect(Collectors.toList());
     }
 
     @RequestMapping("/{id}")
