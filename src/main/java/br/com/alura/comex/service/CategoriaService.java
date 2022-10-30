@@ -4,6 +4,7 @@ import br.com.alura.comex.config.exception.NotFoundException;
 import br.com.alura.comex.model.Categoria;
 import br.com.alura.comex.model.StatusCategoria;
 import br.com.alura.comex.model.dto.CategoriaDto;
+import br.com.alura.comex.model.projections.CategoriaPedidosProjection;
 import br.com.alura.comex.repository.CategoriaRepository;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -61,5 +62,9 @@ public class CategoriaService {
 
     protected Categoria persist(Categoria categoria) {
         return categoriaRepository.saveAndFlush(categoria);
+    }
+
+    public List<CategoriaPedidosProjection> pedidos(){
+        return categoriaRepository.relatorioPedidos();
     }
 }

@@ -4,6 +4,7 @@ import br.com.alura.comex.model.Categoria;
 import br.com.alura.comex.model.Cliente;
 import br.com.alura.comex.model.dto.CategoriaDto;
 import br.com.alura.comex.model.dto.CategoriaDto;
+import br.com.alura.comex.model.projections.CategoriaPedidosProjection;
 import br.com.alura.comex.service.CategoriaService;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
@@ -32,5 +33,10 @@ public class CategoriaController {
         Categoria categoria = categoriaService.inserir(clienteDto);
         URI uri = uriBuilder.path("/categorias/{id}").buildAndExpand(categoria.getId()).toUri();
         return ResponseEntity.created(uri).body(new CategoriaDto(categoria));
+    }
+
+    @GetMapping("/pedidos")
+    public List<CategoriaPedidosProjection> pedidos() {
+        return categoriaService.pedidos();
     }
 }
