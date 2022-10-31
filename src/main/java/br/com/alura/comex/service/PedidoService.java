@@ -104,6 +104,14 @@ public class PedidoService {
             pedido.setTipoDesconto(TipoDesconto.FIDELIDADE);
             pedido.setDesconto(BigDecimal.valueOf(0.05));
         }
-        return pedidoRepository.saveAndFlush(pedido);
+        pedidoRepository.saveAndFlush(pedido);
+        /**
+         * Aplicando baixa no estoque
+         */
+        pedido.getItens().forEach(a -> {
+            a.getProduto().setQuantidadeEstoque(a.getProduto().getQuantidadeEstoque() - a.getQuantidade());
+            produtoService.atualizar(a.getProduto());
+        });
+        return pedido;
     }
 }
