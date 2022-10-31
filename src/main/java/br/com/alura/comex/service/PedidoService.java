@@ -78,6 +78,7 @@ public class PedidoService {
             if (produto.getQuantidadeEstoque() < item.getQuantidade()) {
                 throw new BusinessException(messageSource.getMessage("Insufficient.stock", new Object[]{produto.getNome(), item.getQuantidade()}, LocaleContextHolder.getLocale()));
             }
+            item.setProduto(produto);
             item.setPrecoUnitario(produto.getPrecoUnitario());
             item.setDesconto(BigDecimal.ZERO);
             item.setTipoDesconto(TipoDescontoItem.NENHUM);

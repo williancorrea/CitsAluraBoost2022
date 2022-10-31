@@ -9,6 +9,8 @@ import br.com.alura.comex.repository.CategoriaRepository;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,8 +27,8 @@ public class CategoriaService {
         this.categoriaRepository = categoriaRepository;
     }
 
-    public List<Categoria> listarTodos() {
-        return categoriaRepository.findAll();
+    public Page<Categoria> listarTodos(Pageable pageable) {
+        return categoriaRepository.findAll(pageable);
     }
 
     public Categoria buscarPorId(Long id) {
