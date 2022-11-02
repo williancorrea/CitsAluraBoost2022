@@ -6,6 +6,8 @@ import br.com.alura.comex.model.dto.CategoriaDto;
 import br.com.alura.comex.model.dto.CategoriaDto;
 import br.com.alura.comex.model.projections.CategoriaPedidosProjection;
 import br.com.alura.comex.service.CategoriaService;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +31,7 @@ public class CategoriaController {
     }
 
     @PostMapping
+    @CacheEvict(value = "listaCategorias", allEntries = true)
     public ResponseEntity<CategoriaDto> cadastrar(@RequestBody @Valid CategoriaDto clienteDto, UriComponentsBuilder uriBuilder) {
         Categoria categoria = categoriaService.inserir(clienteDto);
         URI uri = uriBuilder.path("/categorias/{id}").buildAndExpand(categoria.getId()).toUri();
@@ -36,6 +39,7 @@ public class CategoriaController {
     }
 
     @GetMapping("/pedidos")
+    @Cacheable(value = "listaCategoriasPedidos")
     public List<CategoriaPedidosProjection> pedidos() {
         return categoriaService.pedidos();
     }

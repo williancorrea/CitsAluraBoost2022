@@ -4,6 +4,8 @@ import br.com.alura.comex.model.Produto;
 import br.com.alura.comex.model.dto.ClienteDto;
 import br.com.alura.comex.model.dto.ProdutoDto;
 import br.com.alura.comex.service.ProdutoService;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -32,7 +34,8 @@ public class ProdutoController {
     }
 
     @RequestMapping
-    public List<ProdutoDto> listar( @PageableDefault(sort = {"nome"}, direction = Sort.Direction.ASC, value = 5) Pageable pageable) {
+    @Cacheable(value = "listaProdutos")
+    public List<ProdutoDto> listar(@PageableDefault(sort = {"nome"}, direction = Sort.Direction.ASC, value = 5) Pageable pageable) {
         return produtoService.listarTodos(pageable)
                 .stream().toList()
                 .parallelStream()
@@ -41,6 +44,7 @@ public class ProdutoController {
     }
 
     @PostMapping
+    @CacheEvict(value = "listaProdutos", allEntries = true)
     public ResponseEntity<ProdutoDto> cadastrar(@RequestBody @Valid ProdutoDto produtoDto, UriComponentsBuilder uriBuilder) {
         Produto produto = produtoService.inserir(produtoDto);
         URI uri = uriBuilder.path("/produtos/{id}").buildAndExpand(produto.getId()).toUri();

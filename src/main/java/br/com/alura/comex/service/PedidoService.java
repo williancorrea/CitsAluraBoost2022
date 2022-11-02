@@ -93,7 +93,7 @@ public class PedidoService {
                     .filter(b -> b.getProduto().equals(a.getProduto()))
                     .mapToInt(ItemDePedido::getQuantidade)
                     .sum();
-            if (soma >= 10) {
+            if (soma > 10) {
                 a.setDesconto(BigDecimal.valueOf(0.10));
                 a.setTipoDesconto(TipoDescontoItem.QUANTIDADE);
             }

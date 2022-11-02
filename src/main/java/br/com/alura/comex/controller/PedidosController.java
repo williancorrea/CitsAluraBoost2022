@@ -1,9 +1,8 @@
 package br.com.alura.comex.controller;
 
-import br.com.alura.comex.model.Produto;
 import br.com.alura.comex.model.dto.PedidoNovoDto;
 import br.com.alura.comex.service.PedidoService;
-import br.com.alura.comex.service.ProdutoService;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +24,7 @@ public class PedidosController {
     }
 
     @PostMapping
+    @CacheEvict(value = "listaCategoriasPedidos", allEntries = true)
     public ResponseEntity<PedidoNovoDto> cadastrar(@RequestBody @Valid PedidoNovoDto dto) {
         pedidoService.inserir(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(dto);
