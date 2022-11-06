@@ -1,21 +1,21 @@
-package br.com.alura.comex.config.security;
+package br.com.alura.comex.service;
 
 import br.com.alura.comex.model.Usuario;
-import br.com.alura.comex.repository.UsuarioRepository;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Lazy;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import java.time.OffsetDateTime;
 import java.util.Date;
 
 @Service
 public class TokenService {
 
-    @Value("${forum.jwt.expiration}")
-    private String expiration;
+    @Value("${forum.jwt.expirationInDays}")
+    private Long expirationInDays;
 
     @Value("${forum.jwt.secret}")
     private String secret;
@@ -23,13 +23,11 @@ public class TokenService {
 
     public String gerarToken(Authentication authentication) {
         Usuario logado = (Usuario) authentication.getPrincipal();
-        Date hoje = new Date();
-        Date dataExpiracao = new Date(hoje.getTime() + Long.parseLong(expiration));
         return Jwts.builder()
                 .setIssuer("API do forum da alura")
                 .setSubject(logado.getId().toString())
-                .setIssuedAt(hoje)
-                .setExpiration(dataExpiracao)
+                .setIssuedAt(Date.from(OffsetDateTime.now().toInstant()))
+                .setExpiration(Date.from(OffsetDateTime.now().plusDays(this.expirationInDays).toInstant()))
                 .signWith(SignatureAlgorithm.HS256, secret)
                 .compact();
 
@@ -46,7 +44,15 @@ public class TokenService {
     }
 
     public Long getIdUsuario(String token){
-        var claims = Jwts.parser().setSigningKey(this.secret).parseClaimsJws(token).getBody();
+        var claims = Jwts.parser()
+                .setSigningKey(this.secret)
+                .parseClaimsJws(token)
+                .getBody();
         return Long.parseLong(claims.getSubject());
+    }
+
+    public Long getIdUsuario(HttpHeaders headers){
+        var token = headers.get("authorization").get(0).replace("Bearer ", "");
+        return getIdUsuario(token);
     }
 }

@@ -1,7 +1,8 @@
-package br.com.alura.comex.config.security;
+package br.com.alura.comex.filter;
 
+import br.com.alura.comex.service.AutenticacaoService;
+import br.com.alura.comex.service.TokenService;
 import br.com.alura.comex.model.Usuario;
-import br.com.alura.comex.repository.UsuarioRepository;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,7 +20,9 @@ public class AutenticacaoViaTokenFilter extends OncePerRequestFilter {
     private TokenService tokenService;
     private AutenticacaoService autenticacaoService;
 
-    public AutenticacaoViaTokenFilter(TokenService tokenService, AutenticacaoService autenticacaoService) {
+    public AutenticacaoViaTokenFilter(
+            @Lazy TokenService tokenService,
+            @Lazy AutenticacaoService autenticacaoService) {
         this.tokenService = tokenService;
         this.autenticacaoService = autenticacaoService;
     }
@@ -41,9 +44,9 @@ public class AutenticacaoViaTokenFilter extends OncePerRequestFilter {
 
     private String recuperarToken(HttpServletRequest request) {
         String token = request.getHeader("Authorization");
-        if (token == null || !token.startsWith("Bearer ")) {
+        if (token == null || token.isBlank() || !token.startsWith("Bearer ")) {
             return null;
         }
-        return token.substring(7, token.length());
+        return token.replace("Bearer ", "");
     }
 }

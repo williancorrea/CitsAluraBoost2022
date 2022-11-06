@@ -17,7 +17,6 @@ import java.util.List;
 @AllArgsConstructor
 public class PedidoNovoDto {
 
-
     @NotNull
     private Long clienteId;
 

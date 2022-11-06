@@ -4,6 +4,7 @@ import br.com.alura.comex.model.Cliente;
 import br.com.alura.comex.model.dto.ClienteDto;
 import br.com.alura.comex.model.dto.ClienteListDto;
 import br.com.alura.comex.service.ClienteService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Lazy;
@@ -33,11 +34,13 @@ public class ClienteController {
 
     @RequestMapping
     @Cacheable(value = "listaClientes")
+    @SecurityRequirement(name = "bearerAuth")
     public List<ClienteListDto> listar(@PageableDefault(sort = {"nome"}, direction = Sort.Direction.ASC, value = 5) Pageable pageable) {
         return clienteService.listarTodos(pageable).getContent().parallelStream().map(ClienteListDto::new).collect(Collectors.toList());
     }
 
     @RequestMapping("/{id}")
+    @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<ClienteDto> buscarPorNome(@PathVariable("id") Long id) {
         Cliente cliente = clienteService.buscarPorId(id);
         return ResponseEntity.ok().body(new ClienteDto(cliente));
@@ -45,6 +48,7 @@ public class ClienteController {
 
     @PostMapping
     @CacheEvict(value = "listaClientes", allEntries = true)
+    @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<ClienteDto> cadastrar(@RequestBody @Valid ClienteDto clienteDto, UriComponentsBuilder uriBuilder) {
         Cliente cliente = clienteService.inserir(clienteDto);
         URI uri = uriBuilder.path("/clientes/{id}").buildAndExpand(cliente.getId()).toUri();
@@ -53,6 +57,7 @@ public class ClienteController {
 
     @PutMapping("/{id}")
     @CacheEvict(value = "listaClientes", allEntries = true)
+    @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<ClienteDto> cadastrar(@PathVariable("id") @NotNull Long id, @RequestBody @Valid ClienteDto clienteDto) {
         clienteDto.setId(id);
         Cliente cliente = clienteService.atualizar(clienteDto);
@@ -62,6 +67,7 @@ public class ClienteController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
     @CacheEvict(value = "listaClientes", allEntries = true)
+    @SecurityRequirement(name = "bearerAuth")
     public void cadastrar(@PathVariable("id") @NotNull Long id) {
         clienteService.remover(id);
     }

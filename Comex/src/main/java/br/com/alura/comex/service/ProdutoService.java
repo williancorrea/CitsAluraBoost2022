@@ -1,6 +1,7 @@
 package br.com.alura.comex.service;
 
 import br.com.alura.comex.config.exception.NotFoundException;
+import br.com.alura.comex.controller.domain.ProdutoAtualizar;
 import br.com.alura.comex.model.Produto;
 import br.com.alura.comex.model.dto.ProdutoDto;
 import br.com.alura.comex.repository.CategoriaRepository;

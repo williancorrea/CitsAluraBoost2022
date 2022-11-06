@@ -7,7 +7,7 @@ INSERT INTO `alura-comex`.usuario (id, email, nome, senha) VALUES (1, 'willian.v
 INSERT INTO `alura-comex`.categorias (id, nome, status) VALUES (1, 'CATEGORIA 1', 'ATIVA');
 
 # Clientes
-INSERT INTO `alura-comex`.clientes (id, bairro, cidade, complemento, cpf, estado, nome, numero, rua, telefone) VALUES (1 , 'ZZZZ', 'Curitiba', null, '41537106015', 'PR', 'Willian Correa', '1', 'AAA', '');
+INSERT INTO `alura-comex`.clientes (id, bairro, cidade, complemento, cpf, estado, nome, numero, rua, telefone, usuario_id) VALUES (1 , 'ZZZZ', 'Curitiba', null, '41537106015', 'PR', 'Willian Correa', '1', 'AAA', '', 1);
 
 # Produtos
 INSERT INTO `alura-comex`.produtos (id, descricao, nome, preco_unitario, quantidade_estoque, categoria_id) VALUES (1, '', 'PRODUTO 1', 2.50, 50, 1);

@@ -72,6 +72,9 @@ public class Cliente {
     @Column(nullable = false)
     private String estado;
 
+    @OneToOne
+    private Usuario usuario;
+
     public Cliente() {
     }
 

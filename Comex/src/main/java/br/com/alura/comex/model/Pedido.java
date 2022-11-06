@@ -39,4 +39,15 @@ public class Pedido {
     public Pedido() {
     }
 
+    public BigDecimal getValorPedido() {
+        return BigDecimal.valueOf(itens.parallelStream().mapToDouble(a -> a.getValorTotalComDesconto().doubleValue()).sum());
+    }
+
+    public BigDecimal getValorPedidoComDesconto() {
+        return getValorPedido().subtract(getValorPedido().multiply(desconto));
+    }
+
+    public BigDecimal getValorDesconto() {
+        return getValorPedido().subtract(getValorPedidoComDesconto());
+    }
 }

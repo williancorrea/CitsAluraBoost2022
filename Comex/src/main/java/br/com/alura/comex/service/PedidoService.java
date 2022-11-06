@@ -35,11 +35,15 @@ public class PedidoService {
         this.produtoService = produtoService;
     }
 
-    public Pedido buscarPorId(Long id) {
-        return pedidoRepository.findById(id)
+    public Pedido buscarPorId(Long id, Long usuarioid) {
+        Pedido pedido = pedidoRepository.findById(id)
                 .orElseThrow(() -> {
                     throw new NotFoundException(messageSource.getMessage("order.not-found", new Object[]{id}, LocaleContextHolder.getLocale()));
                 });
+        if (pedido.getCliente().getUsuario().getId() != usuarioid) {
+            throw new BusinessException(messageSource.getMessage("order.search_not_allowed", null, LocaleContextHolder.getLocale()));
+        }
+        return pedido;
     }
 
     @Transactional

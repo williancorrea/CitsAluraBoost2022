@@ -1,9 +1,13 @@
 package br.com.alura.comex.controller;
 
+import br.com.alura.comex.controller.domain.ProdutoAtualizar;
+import br.com.alura.comex.model.Cliente;
 import br.com.alura.comex.model.Produto;
 import br.com.alura.comex.model.dto.ClienteDto;
 import br.com.alura.comex.model.dto.ProdutoDto;
 import br.com.alura.comex.service.ProdutoService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Lazy;
@@ -11,14 +15,13 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -45,9 +48,19 @@ public class ProdutoController {
 
     @PostMapping
     @CacheEvict(value = "listaProdutos", allEntries = true)
+    @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<ProdutoDto> cadastrar(@RequestBody @Valid ProdutoDto produtoDto, UriComponentsBuilder uriBuilder) {
         Produto produto = produtoService.inserir(produtoDto);
         URI uri = uriBuilder.path("/produtos/{id}").buildAndExpand(produto.getId()).toUri();
         return ResponseEntity.created(uri).body(new ProdutoDto(produto));
+    }
+
+    @PutMapping("/{id}")
+    @CacheEvict(value = "listaProdutos", allEntries = true)
+    @SecurityRequirement(name = "bearerAuth")
+    public ResponseEntity<ProdutoDto> atualizar(@PathVariable("id") @NotNull Long id, @RequestBody @Valid ProdutoDto dto) {
+        dto.setId(id);
+        Produto produto = produtoService.atualizar(dto);
+        return ResponseEntity.status(HttpStatus.OK).body(new ProdutoDto(produto));
     }
 }

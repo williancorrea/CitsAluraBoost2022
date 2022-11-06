@@ -50,8 +50,16 @@ public class ItemDePedido {
         this.precoUnitario = produto.getPrecoUnitario();
     }
 
-    public BigDecimal getValorTotalItem() {
+    public BigDecimal getValorTotal() {
         return this.precoUnitario.multiply(new BigDecimal(this.quantidade));
+    }
+
+    public BigDecimal getValorTotalComDesconto() {
+        return getValorTotal().subtract(getValorTotal().multiply(desconto));
+    }
+
+    public BigDecimal getValorDescontos() {
+        return getValorTotal().subtract(getValorTotalComDesconto());
     }
 
     @Override
