@@ -15,6 +15,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PedidoService {
@@ -35,12 +36,12 @@ public class PedidoService {
         this.produtoService = produtoService;
     }
 
-    public Pedido buscarPorId(Long id, Long usuarioid) {
+    public Pedido buscarPorId(Long id, Usuario usuario) {
         Pedido pedido = pedidoRepository.findById(id)
                 .orElseThrow(() -> {
                     throw new NotFoundException(messageSource.getMessage("order.not-found", new Object[]{id}, LocaleContextHolder.getLocale()));
                 });
-        if (pedido.getCliente().getUsuario().getId() != usuarioid) {
+        if (pedido.getCliente().getUsuario().getId() != usuario.getId()) {
             throw new BusinessException(messageSource.getMessage("order.search_not_allowed", null, LocaleContextHolder.getLocale()));
         }
         return pedido;
